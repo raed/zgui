@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html layout:decorate="~{menulayout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+<meta charset="UTF-8">
+
+<title>Personen</title>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<table class="entitytable">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Alter</th>
+					<th>Class</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="person : ${personen}">
+					<td>
+						<a th:text="${person.id}" th:href="@{/person/show(id=${person.id})}"></a>
+					</td>
+					<td th:text="${person.name}"></td>
+					<td th:text="${person.age}"></td>
+					<td th:text="${person.getClass().getSimpleName()}"></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<a class="button" th:href="@{/person/edit}">Hinzufügen</a>
+		
+	</div>
+</body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html layout:decorate="~{menulayout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+<meta charset="UTF-8">
+
+<title>Vorlesungen</title>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<table class="entitytable" th:fragment="tbl_vorlesungen()">
+			<thead>
+				<tr>
+					<th>Id</th>
+					<th>Name</th>
+					<th>Dozent</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="vorlesung : ${vorlesungen}">
+					<td>
+						<a th:text="${vorlesung.id}" th:href="@{/vorlesung/show(id=${vorlesung.id})}"></a>
+					</td>
+					<td th:text="${vorlesung.name}"></td>
+					<td>
+						<a th:text="${vorlesung.dozent.name}" th:href="@{/dozent(id=${vorlesung.dozent.id})}"></a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<a class="button" th:href="@{/vorlesung/edit}">Hinzufügen</a>
+
+	</div>
+</body>
+</html>

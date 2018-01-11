@@ -1,0 +1,79 @@
+@themecolor: #0055CC;
+header , footer {
+	background-color: @themecolor;
+	color: white;
+	h1 {
+		padding: 10px;
+		margin: 0px;
+	}
+}
+
+.detailtable {
+	border-collapse: collapse;
+	td {
+		border: 1px solid black;
+		padding: 10px;
+	}
+
+	.evenoddcoloredrows;
+	button {
+		.button;
+	}
+}
+
+.entitytable {
+	border-collapse: collapse;
+	text-align: left;
+	thead {
+		background-color: @themecolor;
+		color: white;
+		th {
+			padding: 10px;
+		}
+	}
+
+	tbody {
+		td {
+			padding: 10px;
+		}
+
+		.evenoddcoloredrows;
+	}
+}
+
+.evenoddcoloredrows {
+	tr {
+		&:nth-child(even) {
+			background-color: #FFF;
+		}
+
+		&:nth-child(odd) {
+			background-color: #EEE;
+		}
+	}
+}
+
+.menu {
+	padding: 0px;
+	margin: 15px;
+	a {
+		.button;
+	}
+}
+
+#main {
+	margin: 15px;
+}
+
+.button {
+	border: 1px solid black;
+	padding: 10px;
+	display: inline-block;
+	width: 100px;
+	text-align: center;
+	margin: 0px;
+	text-decoration: none;
+	color: white;
+	background-color: @themecolor;
+}
+

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html layout:decorate="~{menulayout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+<meta charset="UTF-8">
+
+<title>Person</title>
+</head>
+<body>
+	<div layout:fragment="content">
+
+		<form th:object="${person}" th:action="@{/person/edit}" th:method="${edit ? 'post' : 'get'}">
+			<input hidden="hidden" th:field="*{id}">
+			<table class="detailtable">
+				<tr>
+					<td>Id</td>
+					<td th:text="*{id}"></td>
+				</tr>
+				<tr>
+					<td>Name</td>
+					<td th:if="${edit}">
+						<input th:field="*{name}">
+					</td>
+					<td th:if="${!edit}" th:text="*{name}"></td>
+				</tr>
+				<tr>
+					<td>Alter</td>
+					<td th:if="${edit}">
+						<input th:field="*{age}">
+					</td>
+					<td th:if="${!edit}" th:text="*{age}"></td>
+					<td th:if="${#fields.hasErrors('age')}" th:errors="*{age}">Age Error</td>
+				</tr>
+				<tr>
+					<td th:if="${edit}">
+						<button style="width: 100%;" name="action" value="abort">Abbrechen</button>
+					</td>
+					<td th:if="${!edit}">
+						<button style="width: 100%;" name="action" value="delete">Löschen</button>
+					</td>
+					<td th:if="${edit}">
+						<button style="width: 100%;" name="action" value="save">Speichern</button>
+					</td>
+					<td th:if="${!edit}">
+						<button style="width: 100%;">Bearbeiten</button>
+					</td>
+				</tr>
+			</table>
+
+		</form>
+
+	</div>
+</body>
+</html>

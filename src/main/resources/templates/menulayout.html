@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
+<head>
+<meta charset="UTF-8">
+
+<link rel="stylesheet" type="text/css" th:href="@{/css/normalize.css}">
+<link rel="stylesheet" type="text/less" th:href="@{/css/style.less}">
+
+
+
+<script th:src="@{/js/less.min.js}"></script>
+
+<title>Student</title>
+</head>
+<body>
+
+	<header id="header">
+		<h1>Uniproject</h1>
+	</header>
+
+	<menu class="menu">
+		<a th:href="@{/}">Home</a>
+		<a th:href="@{/student}">Studenten</a>
+		<a th:href="@{/vorlesung}">Vorlesungen</a>
+		<a th:href="@{/dozent}">Dozenten</a>
+		<a th:href="@{/person}">Personen</a>
+	</menu>
+
+	<div id="main" layout:fragment="content"></div>
+
+<!-- 	<footer id="footer"> -->
+<!-- 		<h1>Footer</h1> -->
+<!-- 	</footer> -->
+
+</body>
+</html>
