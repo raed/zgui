@@ -1,4 +1,4 @@
-package de.xenocraft.exp.model;
+package de.xenocraft.zgui.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

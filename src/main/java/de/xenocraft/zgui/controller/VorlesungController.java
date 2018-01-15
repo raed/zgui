@@ -1,4 +1,4 @@
-package de.xenocraft.exp.controller;
+package de.xenocraft.zgui.controller;
 
 import java.util.Map;
 
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import de.xenocraft.exp.model.Dozent;
-import de.xenocraft.exp.model.Student;
-import de.xenocraft.exp.model.Vorlesung;
+import de.xenocraft.zgui.model.Dozent;
+import de.xenocraft.zgui.model.Student;
+import de.xenocraft.zgui.model.Vorlesung;
 
 @Controller
 @ControllerAdvice

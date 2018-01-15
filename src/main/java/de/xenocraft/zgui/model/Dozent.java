@@ -1,4 +1,4 @@
-package de.xenocraft.exp.model;
+package de.xenocraft.zgui.model;
 
 import java.util.List;
 

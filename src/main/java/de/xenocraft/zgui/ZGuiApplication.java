@@ -1,4 +1,4 @@
-package de.xenocraft.exp;
+package de.xenocraft.zgui;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -6,13 +6,13 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import de.xenocraft.exp.model.Mensakarte;
+import de.xenocraft.zgui.model.Mensakarte;
 
 @SpringBootApplication
-public class ExperimentalApplication extends WebMvcConfigurerAdapter {
+public class ZGuiApplication extends WebMvcConfigurerAdapter {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ExperimentalApplication.class, args);
+		SpringApplication.run(ZGuiApplication.class, args);
 	}
 
 	@Override

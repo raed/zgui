@@ -1,4 +1,4 @@
-package de.xenocraft.exp.controller;
+package de.xenocraft.zgui.controller;
 
 import java.beans.PropertyEditorSupport;
 import java.util.HashMap;
@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import de.xenocraft.exp.DAO;
-import de.xenocraft.exp.model.IdAble;
+import de.xenocraft.zgui.DAO;
+import de.xenocraft.zgui.model.IdAble;
 
 @Controller
 public abstract class AEntityController<T extends IdAble> {

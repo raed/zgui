@@ -1,4 +1,4 @@
-package de.xenocraft.exp.config;
+package de.xenocraft.zgui.config;
 
 import javax.sql.DataSource;
 
@@ -15,9 +15,9 @@ public class DatabaseConfig {
 	public DataSource dataSourceLocal() {
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost/experimental?useSSL=true");
-		dataSource.setUsername("root");
-		dataSource.setPassword("root");
+		dataSource.setUrl("jdbc:mysql://xenocraft.de/uniproject?useSSL=true");
+		dataSource.setUsername("uniproject");
+		dataSource.setPassword("20Uniproject18");
 		return dataSource;
 	}
 }

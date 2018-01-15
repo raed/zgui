@@ -7,7 +7,7 @@
 </head>
 <body>
 	<div layout:fragment="content">
-
+		<h2 th:text="'Vorlesung: ' + ${vorlesung.name}"></h2>
 		<form th:object="${vorlesung}" th:action="@{/vorlesung/edit}" th:method="${edit ? 'post' : 'get'}">
 			<div>
 				<h2>Allgemeine Informationen</h2>
@@ -32,7 +32,9 @@
 								<option th:each="dozent : ${allDozenten}" th:value="${dozent.id}" th:text="${dozent.name}"></option>
 							</select>
 						</td>
-						<td th:if="${!edit}" th:text="*{dozent.name}"></td>
+						<td th:if="${!edit}">
+							<a th:text="*{dozent.name}" th:href="@{/dozent/show(id=*{dozent.id})}"></a>
+						</td>
 					</tr>
 					<tr>
 						<td th:if="${edit}">
@@ -54,7 +56,9 @@
 			<div>
 				<h2>Studenten</h2>
 				<div th:if=${edit}>
-					<input th:each="student : ${allStudenten}" th:field="*{studenten}" th:text="${student.name}" th:value="${student.id}" type="checkbox">
+					<div th:each="student : ${allStudenten}">
+						<input th:field="*{studenten}" th:text="${student.name}" th:value="${student.id}" type="checkbox">
+					</div>
 				</div>
 				<div th:if=${!edit}>
 					<div th:replace="studenten :: tbl_studenten(studenten = ${vorlesung.studenten})"></div>

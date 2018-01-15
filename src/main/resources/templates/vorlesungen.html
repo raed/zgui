@@ -7,7 +7,11 @@
 </head>
 <body>
 	<div layout:fragment="content">
-
+	
+		<h2>Vorlesungen</h2>
+		
+		<div th:replace="parts/jssuche::jssuche"></div>
+		
 		<table class="entitytable" th:fragment="tbl_vorlesungen()">
 			<thead>
 				<tr>
@@ -28,7 +32,7 @@
 				</tr>
 			</tbody>
 		</table>
-		
+
 		<a class="button" th:href="@{/vorlesung/edit}">Hinzufügen</a>
 
 	</div>
