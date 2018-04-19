@@ -1,0 +1,12 @@
+1. In Eclipse oder Spring Tool Suite die beiden Projekte 
+	ConceptGenerator und ConceptTarget als "Existing Maven Project" importieren
+	Wichtig: Den Workspace nicht über die vorhandenen ordner legen
+	
+2. Die Main-Methode für den Generator befindet sich in "generator.GenerateMain.java"
+
+3. Die Main-Methode für das Target befindet sich in "concept.predefined.App.java"
+	-> Am besten als Spring Boot App ausführen
+	
+Die Datenbank befindet sich auf meinem privatserver auf xenocraft.de
+Über PhpMyAdmin (xenocraft.de/phpmyadmin) lassen sich die datenbankeinträge bearbeiten
+die Zugangsdaten lauten: user: uniproject pwd: OBBXezH5V4LWmSqc

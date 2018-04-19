@@ -1,0 +1,30 @@
+<html layout:decorate="~{menulayout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
+
+<head></head>
+
+<body>
+
+
+	<div layout:fragment="content">
+
+		<h2 th:text=${tablemodel.targetName}></h2>
+		<table class="entitytable">
+			<thead>
+				<tr>
+					<th th:text="ID"></th>
+					<th th:each="column : ${tablemodel.attributes}" th:utext="${column.displayName}"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="entity : ${tablemodel.objects}">
+					<td th:utext="${tablemodel.idAttribute.getValue(entity)}"></td>
+					<td th:each="column : ${tablemodel.attributes}" th:utext="${column.getValue(entity)}"></td>
+				</tr>
+			</tbody>
+		</table>
+
+
+	</div>
+
+</body>
+</html>

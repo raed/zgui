@@ -1,0 +1,33 @@
+<html layout:decorate="~{menulayout}" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.springframework.org/security/tags">
+
+<head></head>
+
+<body>
+
+
+	<div layout:fragment="content">
+		<form method="post" th:action="@{${entityModel.getSaveLink().getTarget()}}">
+			<h2>
+				<span th:text="${entityModel.targetName + ' ' + entityModel.entity.id}"></span> <span th:if="${edit}">Bearbeiten</span>
+			</h2>
+			<a th:if="!${edit}" th:href="@{${entityModel.getEditLink().getTarget()}}" class="button">Bearbeiten</a>
+			<input th:if="${edit}" type="submit" class="button" value="Speichern">
+
+			<table class="detailtable">
+				<tr>
+					<td th:text="ID"></td>
+					<td th:utext="${entityModel.entity.id}"></td>
+				</tr>
+				<tr th:each="attribute : ${entityModel.attributes}">
+					<td th:text=${attribute.displayName}></td>
+					<td th:if="!${edit} OR ${attribute.isReadOnly()}" th:utext="${attribute.getValue(entityModel.entity)}"></td>
+					<td th:if="${edit} AND !${attribute.isReadOnly()}" th:utext="${attribute.getInput(entityModel.entity)}"></td>
+				</tr>
+			</table>
+
+		</form>
+
+	</div>
+
+</body>
+</html>

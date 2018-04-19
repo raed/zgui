@@ -1,0 +1,41 @@
+package Person;
+
+concept Person {
+	vorname : string
+	nachname : string
+	noten : list int
+	name = func string (vorname + " " + nachname)
+	alter = func int (5-3)
+	//durchschnitt = double (start=expr , ag=expr , fin = expr)
+}
+	
+concept Vorlesung {
+	id : int
+	name : string
+	dozent : Dozent symmetric vorlesungen
+	studenten : list Student symmetric vorlesungen
+	betreuer : list Student 
+}
+	
+concept Dozent extends Person includes Person {
+	vorlesungen : list Vorlesung symmetric dozent
+	address : Address symmetric dozent
+}
+	
+concept Student extends Person includes Person{
+	matrikelnummer : int
+	vorlesungen : list Vorlesung symmetric studenten
+	address : Address symmetric student
+	fach : string
+}
+
+concept Address {
+	strasse : string
+	hausnummer : int
+	stadt : string
+	land : string
+}
+
+concept Hiwi includes Student, Person {
+	gehalt : double
+}
