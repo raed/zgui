@@ -1,6 +1,7 @@
 package concept.predefined;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,21 +15,24 @@ public class DBService {
 	@PersistenceContext
 	private EntityManager entityManager;
 
-	public <T> List<T> getAll(Class<T> klasse) {
+	public <T extends BaseEntity> List<T> getAll(Class<T> klasse) {
 		return entityManager.createQuery("SELECT a FROM " + klasse.getSimpleName() + " a", klasse).getResultList();
 	}
 
-	public <T> T getByID(Object id, Class<T> klasse) {
-		return entityManager.find(klasse, id);
+	public <T extends BaseEntity> Optional<T> getByID(Object id, Class<T> klasse) {
+//		retr.s
+		T object = entityManager.find(klasse, id); 
+		Optional<T> retr = Optional.ofNullable(object);
+		return retr;
 	}
 
 	@Transactional
-	public <T> T saveOrUpdate(T entity) {
+	public <T extends BaseEntity> T saveOrUpdate(T entity) {
 		return entityManager.merge(entity);
 	}
 
 	@Transactional
-	public <T> void delete(T entity) {
+	public <T extends BaseEntity> void delete(T entity) {
 		entityManager.remove(entity);
 	}
 }

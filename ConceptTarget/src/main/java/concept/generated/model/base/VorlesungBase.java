@@ -1,6 +1,6 @@
 package concept.generated.model.base;
 
-import java.util.List;
+import java.util.*;
 import javax.persistence.*;
 import concept.predefined.BaseEntity;
 import concept.generated.model.Dozent;
@@ -10,19 +10,10 @@ import concept.generated.model.Student;
 @Inheritance(strategy=InheritanceType.JOINED)
 public class VorlesungBase extends BaseEntity{
 
-	private int id;
 	private String name;
-	private Dozent dozent;
-	private List<Student> studenten;
-	private List<Student> betreuer;
-
-	public int getId(){
-		return id;
-	}
-
-	public void setId(int id){
-		this.id = id;
-	}
+	private Dozent dozent = new Dozent();
+	private List<Student> studenten = new ArrayList<Student>();
+	private List<Student> betreuer = new ArrayList<Student>();
 
 	public String getName(){
 		return name;
@@ -32,7 +23,7 @@ public class VorlesungBase extends BaseEntity{
 		this.name = name;
 	}
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	public Dozent getDozent(){
 		return dozent;
 	}

@@ -32,7 +32,7 @@ public class BaseClassGenerator extends AbstractConceptVisitor {
 		StringBuilder sb = new StringBuilder();
 		sb.append("package " + FileUtils.BASEMODEL_PACKAGE + ";\n\n");
 		if (needsListImport(ctx)) {
-			sb.append("import java.util.List;\n");
+			sb.append("import java.util.*;\n");
 		}
 		sb.append("import javax.persistence.*;\n");
 		if(ctx.superConcept() == null) {

@@ -54,10 +54,14 @@ public abstract class AbstractConceptVisitor extends ConceptBaseVisitor<String> 
 		return output;
 	}
 
-	public String calculateTyp(ConceptAttributeContext ctx) {
+	public String calculateTyp(ConceptAttributeContext ctx, boolean concrete) {
 		String typ = visit(ctx.referenceType());
 		if (ctx.LIST() != null) {
-			typ = "List<" + typ + ">";
+			if (concrete) {
+				typ = "ArrayList<" + typ + ">";
+			} else {
+				typ = "List<" + typ + ">";
+			}
 		}
 		return typ;
 	}

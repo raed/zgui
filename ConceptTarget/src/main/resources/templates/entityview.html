@@ -4,26 +4,83 @@
 
 <body>
 
-
 	<div layout:fragment="content">
+
 		<form method="post" th:action="@{${entityModel.getSaveLink().getTarget()}}">
 			<h2>
-				<span th:text="${entityModel.targetName + ' ' + entityModel.entity.id}"></span> <span th:if="${edit}">Bearbeiten</span>
+				<span th:text="${entityModel.targetName + ' ' + entityModel.entity.id}"></span>
+				<span th:if="${edit}">Bearbeiten</span>
+				<span style="float: right;">
+					<a th:if="!${edit}" th:href="@{${entityModel.getEditLink().getTarget()}}" class="button detailButton">Bearbeiten</a> <a th:if="!${edit}" th:href="@{${entityModel.getDeleteLink().getTarget()}}" class="button detailButton">Löschen</a>
+					<input th:if="${edit}" type="submit" class="button detailButton" value="Speichern">
+				</span>
 			</h2>
-			<a th:if="!${edit}" th:href="@{${entityModel.getEditLink().getTarget()}}" class="button">Bearbeiten</a>
-			<input th:if="${edit}" type="submit" class="button" value="Speichern">
 
-			<table class="detailtable">
-				<tr>
-					<td th:text="ID"></td>
-					<td th:utext="${entityModel.entity.id}"></td>
-				</tr>
-				<tr th:each="attribute : ${entityModel.attributes}">
-					<td th:text=${attribute.displayName}></td>
-					<td th:if="!${edit} OR ${attribute.isReadOnly()}" th:utext="${attribute.getValue(entityModel.entity)}"></td>
-					<td th:if="${edit} AND !${attribute.isReadOnly()}" th:utext="${attribute.getInput(entityModel.entity)}"></td>
-				</tr>
-			</table>
+			<div th:if="${bindingResult != null}" style="border: 1px solid red; margin-bottom: 5px; padding: 15px; border-radius: 5px; background-color: #FDD;">
+				<h3 style="color: black; margin: 0px;">Errors</h3>
+				<ul>
+					<li th:each="error : ${bindingResult.getFieldErrors()}">
+						<!-- 					<h5>FieldError</h5> -->
+						<span>Fehler in Eingabefeld</span>
+						"
+						<span th:text="${error.getField()}"> </span>
+						":
+						<span th:text="${error.getRejectedValue()}"> </span>
+						<br>
+						<span th:text="${error.getDefaultMessage()}"> </span>
+					</li>
+				</ul>
+				<span>Bitte erneut Ausfüllen</span>
+			</div>
+
+			<div class="tabs">
+				<ul>
+					<li>
+						<a href="#tab_allgemein">Allgemeine Daten</a>
+					</li>
+					<li th:each="complexAttribute : ${entityModel.complexAttributes}">
+						<a th:href="${'#tab_' + complexAttribute.getAttributePath()}" th:text="${complexAttribute.displayName}">Tab</a>
+					</li>
+					<li th:each="collectionAttribute : ${entityModel.collectionAttributes}">
+						<a th:href="${'#tab_'+ collectionAttribute.getAttributePath()}" th:text="${collectionAttribute.displayName}">Tab</a>
+					</li>
+				</ul>
+
+				<div id="tab_allgemein">
+					<div th:fragment="detailtable">
+						<input type="hidden" th:name="${entityModel.idAttribute.getAttributePath()}" th:id="${entityModel.idAttribute.getAttributePath()}" th:value="${entityModel.entity.id}">
+						<table class="detailtable">
+							<tr>
+								<td th:text="ID"></td>
+								<td th:utext="${entityModel.entity.id}"></td>
+							</tr>
+							<tr th:each="attribute : ${entityModel.attributes}">
+								<td th:text=${attribute.displayName}></td>
+								<td th:if="!${edit} OR ${attribute.isReadOnly()}" th:utext="${attribute.getHTMLValue(entityModel.entity)}"></td>
+								<td th:if="${edit} AND !${attribute.isReadOnly()}" th:utext="${attribute.getHTMLInput(entityModel.entity)}"></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+
+				<div th:id="${'tab_' + complexAttribute.getAttributePath()}" th:each="complexAttribute : ${entityModel.complexAttributes}">
+					<div th:replace="entityview :: detailtable(entityModel = ${complexAttribute.getEntityModel(entityModel.entity)})"></div>
+
+				</div>
+
+				<div th:id="${'tab_' + collectionAttribute.getAttributePath()}" th:each="collectionAttribute : ${entityModel.collectionAttributes}">
+					<div th:if="${!edit}">
+						<div th:insert="tableview :: entityTable(tablemodel = ${collectionAttribute.getTableModel(entityModel.entity)})"></div>
+					</div>
+					<div class="container" th:if="${edit}">
+						<div th:each="object : ${collectionAttribute.getEditModel(entityModel.entity).allObjects}">
+							<input class="check" type="checkbox" th:text="${object.getShortHTMLDisplay()}" th:value="${object.id}" th:name="${collectionAttribute.getAttributePath()}" th:checked="${collectionAttribute.getEditModel(entityModel.entity).objects.contains(object)}">
+							<br>
+						</div>
+					</div>
+				</div>
+
+			</div>
 
 		</form>
 

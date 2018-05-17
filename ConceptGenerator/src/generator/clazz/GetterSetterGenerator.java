@@ -44,7 +44,7 @@ public class GetterSetterGenerator extends AbstractConceptVisitor {
 	@Override
 	public String visitConceptAttribute(ConceptAttributeContext ctx) {
 		StringBuilder sb = new StringBuilder();
-		String typ = calculateTyp(ctx);
+		String typ = calculateTyp(ctx, false);
 		String name = ctx.Identifier().getText();
 
 		sb.append(generateGetter(typ, name, ctx));
@@ -111,9 +111,9 @@ public class GetterSetterGenerator extends AbstractConceptVisitor {
 			}
 		} else {
 			if (targetHasList) {
-				return "@ManyToOne";
+				return "@ManyToOne(cascade = CascadeType.ALL)";
 			} else {
-				return "@OneToOne";
+				return "@OneToOne(cascade = CascadeType.ALL)";
 			}
 		}
 	}

@@ -10,7 +10,6 @@ concept Person {
 }
 	
 concept Vorlesung {
-	id : int
 	name : string
 	dozent : Dozent symmetric vorlesungen
 	studenten : list Student symmetric vorlesungen
@@ -27,6 +26,7 @@ concept Student extends Person includes Person{
 	vorlesungen : list Vorlesung symmetric studenten
 	address : Address symmetric student
 	fach : string
+	master : boolean
 }
 
 concept Address {

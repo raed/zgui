@@ -9,9 +9,9 @@ public class ThymeleafTableModel<T extends BaseEntity> extends AThymeleafModel<T
 	private Collection<T> objects;
 
 	public ThymeleafTableModel(Class<T> clazz) {
-		super(clazz);
+		super(clazz, null);
 	}
-
+	
 	public void setObjects(Collection<T> objects) {
 		this.objects = objects;
 	}

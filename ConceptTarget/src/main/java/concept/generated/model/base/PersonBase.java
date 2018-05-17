@@ -1,6 +1,6 @@
 package concept.generated.model.base;
 
-import java.util.List;
+import java.util.*;
 import javax.persistence.*;
 import concept.predefined.BaseEntity;
 

@@ -43,10 +43,10 @@ public class AttributeGenerator extends AbstractConceptVisitor {
 	public String visitConceptAttribute(ConceptAttributeContext ctx) {
 		StringBuilder sb = new StringBuilder();
 
-		String typ = calculateTyp(ctx);
+		String typ = calculateTyp(ctx, false);
+		String concreteTyp = calculateTyp(ctx, true);
 
-		sb.append("\tprivate " + typ + " ");
-		sb.append(ctx.Identifier().getText() + ";");
+		sb.append("\tprivate " + typ + " " + ctx.Identifier().getText() + " = new " + concreteTyp + "();");
 		return sb.toString();
 	}
 

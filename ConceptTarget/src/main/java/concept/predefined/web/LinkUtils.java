@@ -5,27 +5,43 @@ import concept.predefined.BaseEntity;
 public class LinkUtils {
 
 	public static <T extends BaseEntity> Link createLinkFor(T entity) {
-		String display = entity.getClass().getSimpleName();
+		String display = getLinkDisplay(entity);
 		String target = TestController.ENTITYVIEW_PATH + entity.getClass().getSimpleName().toLowerCase() + "/" + entity.getId();
 		return new Link(display, target);
 	}
 
 	public static <T extends BaseEntity> Link createIDLinkFor(T entity) {
-		String display = "" + entity.getId();
+		String display = getLinkDisplay(entity);
 		String target = TestController.ENTITYVIEW_PATH + entity.getClass().getSimpleName().toLowerCase() + "/" + entity.getId();
 		return new Link(display, target);
 	}
 
 	public static <T extends BaseEntity> Link createEditLinkFor(T entity) {
-		String display = "" + entity.getId();
+		String display = getLinkDisplay(entity);
 		String target = TestController.ENTITYVIEW_PATH + entity.getClass().getSimpleName().toLowerCase() + "/" + entity.getId() + "/edit";
 		return new Link(display, target);
 	}
 
 	public static <T extends BaseEntity> Link createSaveLinkFor(T entity) {
-		String display = "" + entity.getId();
+		String display = getLinkDisplay(entity);
 		String target = TestController.ENTITYVIEW_PATH + entity.getClass().getSimpleName().toLowerCase() + "/" + entity.getId() + "/save";
 		return new Link(display, target);
+	}
+
+	public static <T extends BaseEntity> Link createDeleteLinkFor(T entity) {
+		String display = getLinkDisplay(entity);
+		String target = TestController.ENTITYVIEW_PATH + entity.getClass().getSimpleName().toLowerCase() + "/" + entity.getId() + "/delete";
+		return new Link(display, target);
+	}
+
+	public static <T extends BaseEntity> Link createAddLinkFor(Class<T> targetClass) {
+		String display = targetClass.getSimpleName() + " hinzufügen";
+		String target = TestController.ENTITYVIEW_PATH + targetClass.getSimpleName().toLowerCase() + "/new";
+		return new Link(display, target);
+	}
+
+	private static <T extends BaseEntity> String getLinkDisplay(T entity) {
+		return entity.getShortHTMLDisplay();
 	}
 
 	public static class Link implements Comparable<Link> {

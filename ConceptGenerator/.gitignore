@@ -2,11 +2,12 @@
 .metadata
 
 ### STS ###
-#.classpath
-#.factorypath
-#.project
-#.settings
-#.springBeans
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
 ### Eclipse ###
 bin
 target

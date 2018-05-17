@@ -1,6 +1,6 @@
 package concept.generated.model.base;
 
-import java.util.List;
+import java.util.*;
 import javax.persistence.*;
 import concept.generated.model.Address;
 import concept.generated.model.Vorlesung;
@@ -10,8 +10,8 @@ import concept.generated.model.Person;
 @Inheritance(strategy=InheritanceType.JOINED)
 public class DozentBase extends Person{
 
-	private List<Vorlesung> vorlesungen;
-	private Address address;
+	private List<Vorlesung> vorlesungen = new ArrayList<Vorlesung>();
+	private Address address = new Address();
 
 	@OneToMany(mappedBy = "dozent")
 	public List<Vorlesung> getVorlesungen(){
@@ -22,7 +22,7 @@ public class DozentBase extends Person{
 		this.vorlesungen = vorlesungen;
 	}
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	public Address getAddress(){
 		return address;
 	}
