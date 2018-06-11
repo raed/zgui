@@ -9,8 +9,6 @@ import antlr.ConceptParser.CompilationUnitContext;
 import antlr.ConceptParser.ConceptAttributeContext;
 import antlr.ConceptParser.DataAttributeContext;
 import antlr.ConceptParser.PrimitiveTypeContext;
-import antlr.ConceptParser.PropertyContext;
-import antlr.ConceptParser.PropertyListContext;
 import antlr.ConceptParser.ReferenceTypeContext;
 
 public abstract class AbstractConceptVisitor extends ConceptBaseVisitor<String> {
@@ -40,36 +38,37 @@ public abstract class AbstractConceptVisitor extends ConceptBaseVisitor<String> 
 		if (ctx.getText().equals("string")) {
 			return "String";
 		}
+		if (ctx.getText().equals("date")) {
+			return "Date";
+		}
+		if (ctx.getText().equals("datetime")) {
+			return "Date";
+		}
 		return ctx.getText();
 	}
-
-	public static String firstLetterCap(String input) {
-		if (input == null) {
-			return null;
-		}
-		String output = input.substring(0, 1).toUpperCase();
-		if (input.length() > 1) {
-			output += input.substring(1);
-		}
-		return output;
-	}
-
+	
 	public String calculateTyp(ConceptAttributeContext ctx, boolean concrete) {
 		String typ = visit(ctx.referenceType());
 		if (ctx.LIST() != null) {
-			if (concrete) {
-				typ = "ArrayList<" + typ + ">";
-			} else {
-				typ = "List<" + typ + ">";
-			}
+			typ = getListType(typ, concrete);
 		}
 		return typ;
 	}
 
-	public String calculateTyp(DataAttributeContext ctx) {
+	public String calculateTyp(DataAttributeContext ctx, boolean concrete) {
 		String typ = visit(ctx.primitiveType());
 		if (ctx.LIST() != null) {
-			typ = "List<" + changePrimitiveToWrapper(typ) + ">";
+			typ = getListType(typ, concrete);
+		}
+		return typ;
+	}
+	
+	private static String getListType(String typ, boolean concrete) {
+		String wrapperTyp = changePrimitiveToWrapper(typ);
+		if (concrete) {
+			typ = "ArrayList<" + wrapperTyp + ">";
+		} else {
+			typ = "List<" + wrapperTyp + ">";
 		}
 		return typ;
 	}
@@ -93,21 +92,19 @@ public abstract class AbstractConceptVisitor extends ConceptBaseVisitor<String> 
 		case "short":
 			return "Short";
 		default:
-			throw new IllegalArgumentException("Unknown primitive: " + primitive);
+			return primitive;
 		}
 	}
 
-	@Deprecated
-	public static boolean containsProperty(PropertyListContext plc, int property) {
-		if (plc == null) {
-			return false;
+	public static String firstLetterCap(String input) {
+		if (input == null) {
+			return null;
 		}
-		for (PropertyContext pc : plc.property()) {
-			if (pc.start.getType() == property) {
-				return true;
-			}
+		String output = input.substring(0, 1).toUpperCase();
+		if (input.length() > 1) {
+			output += input.substring(1);
 		}
-		return false;
+		return output;
 	}
 
 	protected void createFile(File folder, String fileName, String content, boolean overwrite) {

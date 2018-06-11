@@ -1,4 +1,4 @@
-package concept.predefined.web;
+package concept.predefined.web.model;
 
 import java.util.Collection;
 
@@ -11,7 +11,7 @@ public class ThymeleafTableModel<T extends BaseEntity> extends AThymeleafModel<T
 	public ThymeleafTableModel(Class<T> clazz) {
 		super(clazz, null);
 	}
-	
+
 	public void setObjects(Collection<T> objects) {
 		this.objects = objects;
 	}

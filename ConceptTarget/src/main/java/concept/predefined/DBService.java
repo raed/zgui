@@ -1,5 +1,6 @@
 package concept.predefined;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,12 +17,21 @@ public class DBService {
 	private EntityManager entityManager;
 
 	public <T extends BaseEntity> List<T> getAll(Class<T> klasse) {
-		return entityManager.createQuery("SELECT a FROM " + klasse.getSimpleName() + " a", klasse).getResultList();
+		List<T> resultList = entityManager.createQuery("SELECT a FROM " + klasse.getSimpleName() + " a", klasse).getResultList();
+		sortIfComparable(resultList, klasse);
+		return resultList;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private <T> void sortIfComparable(List<T> resultList, Class<T> klasse) {
+		if (Comparable.class.isAssignableFrom(klasse)) {
+			List<Comparable> compList = (List<Comparable>) resultList;
+			Collections.sort(compList);
+		}
 	}
 
 	public <T extends BaseEntity> Optional<T> getByID(Object id, Class<T> klasse) {
-//		retr.s
-		T object = entityManager.find(klasse, id); 
+		T object = entityManager.find(klasse, id);
 		Optional<T> retr = Optional.ofNullable(object);
 		return retr;
 	}

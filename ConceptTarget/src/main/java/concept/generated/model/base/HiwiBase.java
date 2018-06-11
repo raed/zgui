@@ -1,11 +1,11 @@
 package concept.generated.model.base;
 
 import javax.persistence.*;
-import concept.predefined.BaseEntity;
+import concept.generated.model.Person;
 
 @MappedSuperclass
 @Inheritance(strategy=InheritanceType.JOINED)
-public class HiwiBase extends BaseEntity{
+public class HiwiBase extends Person{
 
 	private double gehalt;
 

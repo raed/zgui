@@ -1,7 +1,8 @@
-package concept.predefined.web;
+package concept.predefined.web.model;
 
 import concept.predefined.BaseEntity;
 import concept.predefined.DBService;
+import concept.predefined.web.LinkUtils;
 import concept.predefined.web.LinkUtils.Link;
 
 public class ThymeleafEntityModel<T extends BaseEntity> extends AThymeleafModel<T> {

@@ -38,11 +38,17 @@
 					<li>
 						<a href="#tab_allgemein">Allgemeine Daten</a>
 					</li>
+					<li th:if="${edit && entityModel.getExtraEntityAttributes().isPresent()}">
+						<a href="#tab_extraattributes">Extra Attributes</a>
+					</li>
 					<li th:each="complexAttribute : ${entityModel.complexAttributes}">
 						<a th:href="${'#tab_' + complexAttribute.getAttributePath()}" th:text="${complexAttribute.displayName}">Tab</a>
 					</li>
-					<li th:each="collectionAttribute : ${entityModel.collectionAttributes}">
-						<a th:href="${'#tab_'+ collectionAttribute.getAttributePath()}" th:text="${collectionAttribute.displayName}">Tab</a>
+					<li th:each="entityCollectionAttribute : ${entityModel.entityCollectionAttributes}">
+						<a th:href="${'#tab_'+ entityCollectionAttribute.getAttributePath()}" th:text="${entityCollectionAttribute.displayName}">Tab</a>
+					</li>
+					<li th:each="simpleCollectionAttribute : ${entityModel.simpleCollectionAttributes}">
+						<a th:href="${'#tab_'+ simpleCollectionAttribute.getAttributePath()}" th:text="${simpleCollectionAttribute.displayName}">Tab</a>
 					</li>
 				</ul>
 
@@ -59,16 +65,44 @@
 								<td th:if="!${edit} OR ${attribute.isReadOnly()}" th:utext="${attribute.getHTMLValue(entityModel.entity)}"></td>
 								<td th:if="${edit} AND !${attribute.isReadOnly()}" th:utext="${attribute.getHTMLInput(entityModel.entity)}"></td>
 							</tr>
+							<th:block th:if="${entityModel.getExtraEntityAttributes().isPresent() && !edit}">
+								<tr th:each="extraAttr : ${entityModel.getExtraEntityAttributes().get().getValueObject(entityModel.entity)}">
+									<td th:text="${extraAttr.key.name}"></td>
+									<td th:text="${extraAttr.value}"></td>
+								</tr>
+							</th:block>
 						</table>
 					</div>
 				</div>
 
-				<div th:id="${'tab_' + complexAttribute.getAttributePath()}" th:each="complexAttribute : ${entityModel.complexAttributes}">
-					<div th:replace="entityview :: detailtable(entityModel = ${complexAttribute.getEntityModel(entityModel.entity)})"></div>
-
+				<div th:if="${edit && entityModel.getExtraEntityAttributes().isPresent()}" th:id="tab_extraattributes">
+					<table class="entitytable">
+						<thead>
+							<tr>
+								<th>Attribut</th>
+								<th>Wert</th>
+								<th>Leer</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="attribute : ${allExtraAttributes}">
+								<td th:text="${attribute.name}"></td>
+								<td>
+									<input th:disabled="!${entityModel.entity.extraAttributes.containsKey(attribute)}" type="text" class="extraAttributeInput" th:name="${entityModel.getExtraEntityAttributes().get().getAttributePath() + '[' + attribute.id + ']'}" th:value="${entityModel.entity.extraAttributes.get(attribute)}">
+								</td>
+								<td>
+									<input th:checked="!${entityModel.entity.extraAttributes.containsKey(attribute)}" class="check disableExtraAttribute" type="checkbox">
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 
-				<div th:id="${'tab_' + collectionAttribute.getAttributePath()}" th:each="collectionAttribute : ${entityModel.collectionAttributes}">
+				<div th:id="${'tab_' + complexAttribute.getAttributePath()}" th:each="complexAttribute : ${entityModel.complexAttributes}">
+					<div th:replace="entityview :: detailtable(entityModel = ${complexAttribute.getEntityModel(entityModel.entity)})"></div>
+				</div>
+
+				<div th:id="${'tab_' + collectionAttribute.getAttributePath()}" th:each="collectionAttribute : ${entityModel.entityCollectionAttributes}">
 					<div th:if="${!edit}">
 						<div th:insert="tableview :: entityTable(tablemodel = ${collectionAttribute.getTableModel(entityModel.entity)})"></div>
 					</div>
@@ -77,6 +111,23 @@
 							<input class="check" type="checkbox" th:text="${object.getShortHTMLDisplay()}" th:value="${object.id}" th:name="${collectionAttribute.getAttributePath()}" th:checked="${collectionAttribute.getEditModel(entityModel.entity).objects.contains(object)}">
 							<br>
 						</div>
+					</div>
+				</div>
+
+				<div th:id="${'tab_' + simpleCollectionAttribute.getAttributePath()}" th:each="simpleCollectionAttribute : ${entityModel.simpleCollectionAttributes}">
+					<div th:if="${!edit}">
+						<ul>
+							<li th:each="value : ${simpleCollectionAttribute.getCollection(entityModel.entity)}" th:text="${value}"></li>
+						</ul>
+					</div>
+					<div th:if="${edit}">
+						<ul>
+							<li th:each="value : ${simpleCollectionAttribute.getCollection(entityModel.entity)}">
+								<input type="text" th:name="${simpleCollectionAttribute.attributePath}" th:value="${value}">
+								<button class="xButton colAttrRemoveButton" type="button">X</button>
+							</li>
+						</ul>
+						<button type="button" class="button colAttrAddButton" th:data-attributepath="${simpleCollectionAttribute.attributePath}">Hinzufügen</button>
 					</div>
 				</div>
 

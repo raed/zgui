@@ -2,15 +2,17 @@ package concept.generated.model.base;
 
 import java.util.*;
 import javax.persistence.*;
-import concept.predefined.BaseEntity;
+import concept.predefined.ExtendedEntity;
+import concept.generated.model.Address;
 
 @MappedSuperclass
 @Inheritance(strategy=InheritanceType.JOINED)
-public class PersonBase extends BaseEntity{
+public class PersonBase extends ExtendedEntity{
 
 	private String vorname;
 	private String nachname;
-	private List<Integer> noten;
+	private Address address = new Address();
+	private Date geburtstag;
 
 
 
@@ -30,13 +32,21 @@ public class PersonBase extends BaseEntity{
 		this.nachname = nachname;
 	}
 
-	@ElementCollection
-	public List<Integer> getNoten(){
-		return noten;
+	@ManyToOne(cascade = CascadeType.ALL)
+	public Address getAddress(){
+		return address;
 	}
 
-	public void setNoten(List<Integer> noten){
-		this.noten = noten;
+	public void setAddress(Address address){
+		this.address = address;
+	}
+
+	public Date getGeburtstag(){
+		return geburtstag;
+	}
+
+	public void setGeburtstag(Date geburtstag){
+		this.geburtstag = geburtstag;
 	}
 
 	@Transient

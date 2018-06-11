@@ -86,7 +86,7 @@ chainAttribute
 	;
 
 functionAttribute
-	: Identifier '=' 'func' simpleType '(' expr ')' 
+	: Identifier '=' 'func' simpleType '{' expr '}' 
 	;
 
 expr
@@ -136,6 +136,8 @@ primitiveType
 	| 'float'
 	| 'double'
 	| 'string'
+	| 'date'
+	| 'datetime'
 	;
 
 qualifiedName

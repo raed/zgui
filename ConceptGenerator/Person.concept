@@ -3,30 +3,35 @@ package Person;
 concept Person {
 	vorname : string
 	nachname : string
-	noten : list int
-	name = func string (vorname + " " + nachname)
-	alter = func int (5-3)
+	address : Address symmetric dozent
+	geburtstag : date
+	name = func string {vorname + " " + nachname}
+	alter = func int {5-3}
 	//durchschnitt = double (start=expr , ag=expr , fin = expr)
+}
+	
+concept Dozent extends Person{
+	vorlesungen : list Vorlesung symmetric dozent
+}
+	
+concept Student extends Person{
+	matrikelnummer : int
+	vorlesungen : list Vorlesung symmetric studenten
+	fach : string
+	master : boolean
+	noten : list int
+}
+
+concept Hiwi extends Person{
+	gehalt : double
 }
 	
 concept Vorlesung {
 	name : string
 	dozent : Dozent symmetric vorlesungen
 	studenten : list Student symmetric vorlesungen
-	betreuer : list Student 
-}
-	
-concept Dozent extends Person includes Person {
-	vorlesungen : list Vorlesung symmetric dozent
-	address : Address symmetric dozent
-}
-	
-concept Student extends Person includes Person{
-	matrikelnummer : int
-	vorlesungen : list Vorlesung symmetric studenten
-	address : Address symmetric student
-	fach : string
-	master : boolean
+	betreuer : list Student
+	ersterTermin : datetime
 }
 
 concept Address {
@@ -34,8 +39,4 @@ concept Address {
 	hausnummer : int
 	stadt : string
 	land : string
-}
-
-concept Hiwi includes Student, Person {
-	gehalt : double
 }

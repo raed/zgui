@@ -5,7 +5,7 @@ import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
-import concept.predefined.web.Invisible;
+import concept.predefined.marker.Invisible;
 
 @MappedSuperclass
 public abstract class BaseEntity {

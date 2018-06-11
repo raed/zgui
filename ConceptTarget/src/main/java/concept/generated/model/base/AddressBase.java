@@ -1,11 +1,11 @@
 package concept.generated.model.base;
 
 import javax.persistence.*;
-import concept.predefined.BaseEntity;
+import concept.predefined.ExtendedEntity;
 
 @MappedSuperclass
 @Inheritance(strategy=InheritanceType.JOINED)
-public class AddressBase extends BaseEntity{
+public class AddressBase extends ExtendedEntity{
 
 	private String strasse;
 	private int hausnummer;

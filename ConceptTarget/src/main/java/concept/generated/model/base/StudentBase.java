@@ -2,7 +2,6 @@ package concept.generated.model.base;
 
 import java.util.*;
 import javax.persistence.*;
-import concept.generated.model.Address;
 import concept.generated.model.Vorlesung;
 import concept.generated.model.Person;
 
@@ -12,9 +11,9 @@ public class StudentBase extends Person{
 
 	private int matrikelnummer;
 	private List<Vorlesung> vorlesungen = new ArrayList<Vorlesung>();
-	private Address address = new Address();
 	private String fach;
 	private boolean master;
+	private List<Integer> noten = new ArrayList<Integer>();
 
 	public int getMatrikelnummer(){
 		return matrikelnummer;
@@ -34,15 +33,6 @@ public class StudentBase extends Person{
 		this.vorlesungen = vorlesungen;
 	}
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	public Address getAddress(){
-		return address;
-	}
-
-	public void setAddress(Address address){
-		this.address = address;
-	}
-
 	public String getFach(){
 		return fach;
 	}
@@ -57,6 +47,15 @@ public class StudentBase extends Person{
 
 	public void setMaster(boolean master){
 		this.master = master;
+	}
+
+	@ElementCollection
+	public List<Integer> getNoten(){
+		return noten;
+	}
+
+	public void setNoten(List<Integer> noten){
+		this.noten = noten;
 	}
 
 }

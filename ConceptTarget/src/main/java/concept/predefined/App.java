@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
-@EntityScan("concept.generated.model")
+@EntityScan(basePackages = { "concept.generated.model", "concept.predefined.dynamic" })
 @EnableAutoConfiguration
 @ComponentScan("concept")
 public class App {

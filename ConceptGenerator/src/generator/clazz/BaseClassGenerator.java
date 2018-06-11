@@ -31,12 +31,12 @@ public class BaseClassGenerator extends AbstractConceptVisitor {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("package " + FileUtils.BASEMODEL_PACKAGE + ";\n\n");
-		if (needsListImport(ctx)) {
+		if (needsUtilImport(ctx)) {
 			sb.append("import java.util.*;\n");
 		}
 		sb.append("import javax.persistence.*;\n");
-		if(ctx.superConcept() == null) {
-			sb.append("import concept.predefined.BaseEntity;\n");	
+		if (ctx.superConcept() == null) {
+			sb.append("import concept.predefined.ExtendedEntity;\n");
 		}
 		sb.append(getModelImports(ctx));
 		sb.append("\n");
@@ -56,12 +56,12 @@ public class BaseClassGenerator extends AbstractConceptVisitor {
 		if (ctx.superConcept() != null) {
 			return ctx.superConcept().referenceType().Identifier().getText();
 		}
-		return "BaseEntity";
+		return "ExtendedEntity";
 	}
 
 	private String getModelImports(ConceptDeclarationContext ctx) {
 		ConceptBaseVisitor<Set<String>> neededClassesVisitor = new ConceptBaseVisitor<Set<String>>() {
-			
+
 			@Override
 			protected Set<String> defaultResult() {
 				return null;
@@ -85,7 +85,7 @@ public class BaseClassGenerator extends AbstractConceptVisitor {
 				nameSet.add(ctx.referenceType().Identifier().getText());
 				return nameSet;
 			}
-			
+
 			@Override
 			public Set<String> visitSuperConcept(SuperConceptContext ctx) {
 				Set<String> nameSet = new HashSet<>();
@@ -104,7 +104,7 @@ public class BaseClassGenerator extends AbstractConceptVisitor {
 		return "";
 	}
 
-	private boolean needsListImport(ConceptDeclarationContext ctx) {
+	private boolean needsUtilImport(ConceptDeclarationContext conceptDeclaration) {
 		ConceptBaseVisitor<Boolean> needsListVisitor = new ConceptBaseVisitor<Boolean>() {
 
 			@Override
@@ -119,7 +119,7 @@ public class BaseClassGenerator extends AbstractConceptVisitor {
 
 			@Override
 			public Boolean visitDataAttribute(DataAttributeContext ctx) {
-				return ctx.LIST() != null;
+				return ctx.LIST() != null || ctx.getText().contains("date");
 			}
 
 			@Override
@@ -127,7 +127,7 @@ public class BaseClassGenerator extends AbstractConceptVisitor {
 				return ctx.LIST() != null;
 			}
 		};
-		Boolean result = needsListVisitor.visit(ctx);
+		Boolean result = needsListVisitor.visit(conceptDeclaration);
 		return result != null ? result : false;
 	}
 

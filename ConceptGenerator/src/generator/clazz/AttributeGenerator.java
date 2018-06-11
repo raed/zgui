@@ -32,10 +32,14 @@ public class AttributeGenerator extends AbstractConceptVisitor {
 	public String visitDataAttribute(DataAttributeContext ctx) {
 		StringBuilder sb = new StringBuilder();
 
-		String typ = calculateTyp(ctx);
-
-		sb.append("\tprivate " + typ + " ");
-		sb.append(ctx.Identifier().getText() + ";");
+		String typ = calculateTyp(ctx, false);
+		String concreteTyp = calculateTyp(ctx, true);
+		sb.append("\tprivate " + typ + " " + ctx.Identifier().getText());
+		if(ctx.LIST() != null) {
+			sb.append(" = new " + concreteTyp + "()");
+		}
+		
+		sb.append(";");
 		return sb.toString();
 	}
 

@@ -1,8 +1,6 @@
 package concept.predefined.web;
 
-import java.beans.PropertyEditorSupport;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -12,12 +10,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.metamodel.EntityType;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.builder.ReflectionToStringBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,10 +23,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import concept.predefined.BaseEntity;
 import concept.predefined.DBService;
+import concept.predefined.dynamic.Attribute;
 import concept.predefined.web.LinkUtils.Link;
+import concept.predefined.web.model.ThymeleafEntityModel;
+import concept.predefined.web.model.ThymeleafTableModel;
 
 @Controller
-public class TestController {
+public class UniversalController {
 
 	public static final String	TABLEVIEW_PATH	= "/entities/";
 
@@ -44,6 +42,8 @@ public class TestController {
 	private DBService			service;
 	@Autowired
 	private EntityManager		em;
+	@Autowired
+	private EntityUtil			entityUtil;
 
 	@GetMapping("")
 	public String home() {
@@ -62,24 +62,24 @@ public class TestController {
 	}
 
 	@GetMapping(ENTITYVIEW_PATH + "{type}/{id}")
-	public <T extends BaseEntity> ModelAndView viewEntity(@PathVariable("type") String type, @PathVariable("id") int id) {
+	public ModelAndView viewEntity(@PathVariable("type") String type, @PathVariable("id") int id) {
 		return entityView(type, id, false);
 	}
 
 	@GetMapping(ENTITYVIEW_PATH + "{type}/new")
-	public <T extends BaseEntity> ModelAndView newEntity(@PathVariable("type") String type) {
+	public ModelAndView newEntity(@PathVariable("type") String type) {
 		return entityView(type, 0, true);
 	}
 
 	@GetMapping(ENTITYVIEW_PATH + "{type}/{id}/edit")
-	public <T extends BaseEntity> ModelAndView editEntity(@PathVariable("type") String type, @PathVariable("id") int id) {
+	public ModelAndView editEntity(@PathVariable("type") String type, @PathVariable("id") int id) {
 		return entityView(type, id, true);
 	}
 
 	@GetMapping(ENTITYVIEW_PATH + "{type}/{id}/delete")
-	public <T extends BaseEntity> String deleteEntity(@PathVariable("type") String type, @PathVariable("id") int id) {
-		Class<T> clazz = findByName(type);
-		Optional<T> entity = service.getByID(id, clazz);
+	public String deleteEntity(@PathVariable("type") String type, @PathVariable("id") int id) {
+		Class<BaseEntity> clazz = entityUtil.findClassByName(type);
+		Optional<BaseEntity> entity = service.getByID(id, clazz);
 		if (entity.isPresent()) {
 			service.delete(entity.get());
 		} else {
@@ -89,8 +89,8 @@ public class TestController {
 	}
 
 	@PostMapping(ENTITYVIEW_PATH + "{type}/{id}/save")
-	public <T extends BaseEntity> Object saveEntity(@PathVariable("type") String type, @PathVariable("id") int id, HttpServletRequest srequest) throws InstantiationException, IllegalAccessException {
-		BaseEntity entity = dataBinder.bindToClass(type, srequest);
+	public Object saveEntity(@PathVariable("type") String type, @PathVariable("id") int id, HttpServletRequest srequest) throws InstantiationException, IllegalAccessException {
+		BaseEntity entity = dataBinder.bindRequestToClass(type, srequest);
 
 		BindingResult br = dataBinder.getBindingResult();
 		if (br.hasErrors()) {
@@ -114,12 +114,13 @@ public class TestController {
 		return mv;
 	}
 
-	private <T extends BaseEntity> ModelAndView entityView(String type, int id, boolean edit) {
-		Class<T> clazz = findByName(type);
+	private ModelAndView entityView(String type, int id, boolean edit) {
+		Class<BaseEntity> clazz = entityUtil.findClassByName(type);
 		BaseEntity entity = null;
 		if (id != 0) {
 			entity = service.getByID(id, clazz).get();
 		} else {
+			entity = entityUtil.createObject(type);
 			try {
 				entity = clazz.newInstance();
 			} catch (InstantiationException | IllegalAccessException e) {
@@ -129,35 +130,15 @@ public class TestController {
 		return showEntity(entity, edit);
 	}
 
-	private ModelAndView showEntity(BaseEntity entity, boolean edit) {
-		ModelAndView mv = new ModelAndView("entityview");
-		ThymeleafEntityModel<BaseEntity> eModel = new ThymeleafEntityModel<>(entity, service);
-		mv.addObject("entityModel", eModel);
-		mv.addObject("edit", edit);
-		return mv;
-	}
-
 	@GetMapping(TABLEVIEW_PATH + "{type}")
-	public <T extends BaseEntity> ModelAndView showEntitiesTable(@PathVariable("type") String entity) {
+	public ModelAndView showEntitiesTable(@PathVariable("type") String entity) {
 		ModelAndView mv = new ModelAndView("tableview");
-		Class<T> clazz = findByName(entity);
-		ThymeleafTableModel<T> ttm = new ThymeleafTableModel<>(clazz);
-		List<T> objects = service.getAll(clazz);
+		Class<BaseEntity> clazz = entityUtil.findClassByName(entity);
+		ThymeleafTableModel<BaseEntity> ttm = new ThymeleafTableModel<>(clazz);
+		List<BaseEntity> objects = service.getAll(clazz);
 		ttm.setObjects(objects);
 		mv.addObject("tablemodel", ttm);
 		return mv;
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends BaseEntity> Class<T> findByName(String name) {
-		Set<EntityType<?>> entities = em.getMetamodel().getEntities();
-		for (EntityType<?> entity : entities) {
-			Class<?> clazz = entity.getJavaType();
-			if (clazz.getSimpleName().equalsIgnoreCase(name)) {
-				return (Class<T>) clazz;
-			}
-		}
-		throw new IllegalArgumentException("Class " + name + " is not found");
 	}
 
 	@ModelAttribute("menuitems")
@@ -165,7 +146,8 @@ public class TestController {
 		Set<EntityType<?>> entities = em.getMetamodel().getEntities();
 		List<Link> links = new ArrayList<>();
 		for (EntityType<?> entity : entities) {
-			String name = entity.getJavaType().getSimpleName();
+			Class<?> javaType = entity.getJavaType();
+			String name = javaType.getSimpleName();
 			String link = TABLEVIEW_PATH + name;
 			links.add(new Link(name, link));
 		}
@@ -173,48 +155,19 @@ public class TestController {
 		return links;
 	}
 
-	@Component
-	public class DataBinder {
-
-		private BindingResult bindingResult;
-
-		public BaseEntity bindToClass(String className, HttpServletRequest request) {
-			BaseEntity object;
-			try {
-				object = (BaseEntity) findByName(className).newInstance();
-			} catch (InstantiationException | IllegalAccessException e) {
-				throw new IllegalStateException(e);
-			}
-
-			ServletRequestDataBinder binder = new ServletRequestDataBinder(object);
-
-			for (EntityType<?> entityType : em.getMetamodel().getEntities()) {
-				@SuppressWarnings("unchecked")
-				Class<BaseEntity> clazz = (Class<BaseEntity>) entityType.getJavaType();
-				binder.registerCustomEditor(clazz, new PropertyEditorSupport() {
-					@Override
-					public void setAsText(String text) {
-						Optional<BaseEntity> o = service.getByID(Integer.valueOf(text), clazz);
-						if (!o.isPresent()) {
-							throw new IllegalArgumentException();
-						}
-						setValue(o.get());
-					}
-				});
-			}
-
-			binder.bind(request);
-			bindingResult = binder.getBindingResult();
-
-			// Debug:
-			request.getParameterMap().forEach((key, value) -> System.out.println(key + ": " + Arrays.toString(value)));
-			System.out.println(ReflectionToStringBuilder.toString(object, ReflectionToStringBuilder.getDefaultStyle(), true, true, Object.class));
-
-			return object;
-		}
-
-		public BindingResult getBindingResult() {
-			return bindingResult;
-		}
+	private ModelAndView showEntity(BaseEntity entity, boolean edit) {
+		ModelAndView mv = new ModelAndView("entityview");
+		ThymeleafEntityModel<BaseEntity> eModel = new ThymeleafEntityModel<>(entity, service);
+		mv.addObject("entityModel", eModel);
+		mv.addObject("edit", edit);
+		mv.addObject("allExtraAttributes", getExtraAttributesSorted());
+		return mv;
 	}
+
+	private List<Attribute> getExtraAttributesSorted() {
+		List<Attribute> all = service.getAll(Attribute.class);
+		Collections.sort(all);
+		return all;
+	}
+
 }

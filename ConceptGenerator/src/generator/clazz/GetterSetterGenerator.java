@@ -23,7 +23,7 @@ public class GetterSetterGenerator extends AbstractConceptVisitor {
 	@Override
 	public String visitDataAttribute(DataAttributeContext ctx) {
 		StringBuilder sb = new StringBuilder();
-		String typ = calculateTyp(ctx);
+		String typ = calculateTyp(ctx, false);
 		String name = ctx.Identifier().getText();
 
 		sb.append(requireElementCollection(ctx));
