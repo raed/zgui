@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.ElementCollection;
+import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 
 import concept.predefined.dynamic.Attribute;
@@ -14,7 +15,7 @@ public abstract class ExtendedEntity extends BaseEntity {
 
 	private Map<Attribute, String> extraAttributes = new HashMap<>();
 
-	@ElementCollection
+	@ElementCollection(fetch = FetchType.EAGER)
 	@ExtraAttributes
 	public Map<Attribute, String> getExtraAttributes() {
 		return extraAttributes;

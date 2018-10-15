@@ -3,6 +3,7 @@ package concept.predefined;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -18,6 +19,13 @@ public class DBService {
 
 	public <T extends BaseEntity> List<T> getAll(Class<T> klasse) {
 		List<T> resultList = entityManager.createQuery("SELECT a FROM " + klasse.getSimpleName() + " a", klasse).getResultList();
+		sortIfComparable(resultList, klasse);
+		return resultList;
+	}
+
+	public <T extends BaseEntity> List<T> getAllWithoutChildren(Class<T> klasse) {
+		List<T> resultList = entityManager.createQuery("SELECT a FROM " + klasse.getSimpleName() + " a", klasse).getResultList();
+		resultList = resultList.stream().filter(e -> e.getClass().equals(klasse)).collect(Collectors.toList());
 		sortIfComparable(resultList, klasse);
 		return resultList;
 	}
